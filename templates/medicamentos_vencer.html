@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% set titulo = "Medicamentos por Vencer" %}
+{% block contenido %}
+
+<h1 class="mb-4">Medicamentos Próximos a Vencer</h1>
+
+<div class="card shadow">
+    <div class="card-body">
+
+        <table class="table table-hover table-bordered">
+            <thead class="table-danger">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Fecha de Vencimiento</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for m in medicamentos %}
+                <tr>
+                    <td>{{ m[0] }}</td>
+                    <td>{{ m[1] }}</td>
+                    <td>{{ m[2] }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}

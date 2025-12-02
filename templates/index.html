@@ -1,0 +1,214 @@
+{% extends "base.html" %}
+{% set titulo = "Inicio" %}
+{% block contenido %}
+
+<h1 class="mb-4">Dashboard de Consultas</h1>
+
+<!-- ==================== ALERTAS IMPORTANTES ==================== -->
+{% if por_vencer > 0 %}
+<div class="alert alert-warning shadow">
+    <strong>⚠ Atención:</strong> Hay <strong>{{ por_vencer }}</strong> medicamentos próximos a vencer.
+</div>
+{% endif %}
+
+{% if ventas_hoy == 0 %}
+<div class="alert alert-info shadow">
+    No hay ventas registradas hoy.
+</div>
+{% endif %}
+
+<!-- ==================== KPIs ==================== -->
+<div class="row mt-4">
+
+    <div class="col-md-3 mb-3">
+        <a href="/clientes" class="card card-menu2 text-decoration-none">
+            <div class="card text-center shadow p-3">
+                <h6>Total Clientes</h6>
+                <h3>{{ total_clientes }}</h3>
+            </div>
+        </a>
+    </div>
+
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-center shadow p-3">
+            <h6>Ventas Hoy</h6>
+            <h3>{{ ventas_hoy }}</h3>
+        </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <a href="/medicamentos_vencer" class="card card-menu2 text-decoration-none">
+            <div class="card text-center shadow p-3">
+                <h6>Por Vencer</h6>
+                <h3>{{ por_vencer }}</h3>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-3 mb-3">
+        <div class="card text-center shadow p-3">
+            <h6>Facturación (Mes)</h6>
+            <h3>${{ facturacion_mes }}</h3>
+        </div>
+    </div>
+
+</div>
+
+<!-- ==================== TARJETAS PRINCIPALES ==================== -->
+<div class="row mt-4">
+
+   <div class="col-md-4 mb-3">
+       <a href="/clientes" class="card card-menu text-decoration-none">
+            <div class="card-body text-center">
+                <h4>👥 Clientes</h4>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <a href="/buscar_cliente" class="card card-menu text-decoration-none">
+            <div class="card-body text-center">
+                <h4>🔍 Buscar Cliente</h4>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-4 mb-3">
+        <a href="/medicamentos" class="card card-menu text-decoration-none">
+            <div class="card-body text-center">
+                <h4>💊 Medicamentos</h4>
+            </div>
+        </a>
+    </div>
+
+</div>
+
+<!-- ==================== GRÁFICO ==================== -->
+<div class="card shadow mt-5">
+    <div class="card-body">
+        <h4 class="mb-3">Top 5 Medicamentos Más Vendidos</h4>
+        <canvas id="graficoVentas" height="110"></canvas>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+
+<div class="card shadow mt-5" style="max-width: 800px; margin: auto;">
+    <div class="card-body">
+        <h4 class="mb-3">Participación de Ventas por Obra Social</h4>
+        <canvas id="graficoObraSocial" height="120"></canvas>
+    </div>
+</div>
+
+
+<script>
+async function cargarDatos() {
+    try {
+        const res = await fetch("/top_medicamentos");
+        const datos = await res.json();
+
+        const ctx = document.getElementById('graficoVentas');
+
+        new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: datos.labels,
+                datasets: [{
+                    label: 'Cantidad vendida',
+                    data: datos.data,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        ticks: {
+                            callback: function(value) {
+                                return Number.isInteger(value) ? value : ""; 
+                            }
+                        }
+                    }
+                }
+            }
+        });
+
+    } catch (e) {
+        console.error("Error cargando datos del gráfico:", e);
+    }
+}
+
+cargarDatos();
+</script>
+
+
+<script>
+async function cargarObraSocial() {
+    try {
+        const res = await fetch("/ventas_obra_social");
+        const datos = await res.json();
+
+        const ctx = document.getElementById("graficoObraSocial");
+
+        new Chart(ctx, {
+            type: 'pie',
+            data: {
+                labels: datos.labels,
+                datasets: [{
+                    data: datos.data,
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+    } catch (err) {
+        console.error("Error cargando gráfico de obra social:", err);
+    }
+}
+
+cargarObraSocial();
+</script>
+
+
+
+<!-- ==================== ÚLTIMAS VENTAS ==================== -->
+<div class="card shadow mt-5">
+    <div class="card-body">
+
+        <h4 class="mb-3">Últimas 5 Ventas</h4>
+
+        <table class="table table-hover table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>ID</th>
+                    <th>Fecha</th>
+                    <th>Total ($)</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for v in ultimas_ventas %}
+                <tr>
+                    <td>{{ v[0] }}</td>
+                    <td>{{ v[1] }}</td>
+                    <td>{{ v[2] }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}

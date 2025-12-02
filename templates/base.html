@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>{{ titulo }}</title>
+
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <!-- CSS personalizado -->
+    <link rel="stylesheet" href="/static/estilos.css">
+</head>
+<body>
+
+<!-- NAVBAR SUPERIOR -->
+<nav class="navbar navbar-dark bg-primary shadow fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/">💊 Panel de Farmacia</a>
+    <button id="toggleDarkMode" class="btn btn-secondary">Modo oscuro</button>
+
+  </div>
+</nav>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+    <a href="/" class="{% if titulo == 'Inicio' %}active{% endif %}">🏠 Inicio</a>
+    <a href="/clientes" class="{% if titulo == 'Clientes' %}active{% endif %}">👥 Clientes</a>
+    <a href="/buscar_cliente" class="{% if titulo == 'Buscar Cliente' %}active{% endif %}">🔍 Buscar Cliente</a>
+    <a href="/medicamentos" class="{% if titulo == 'Medicamentos' %}active{% endif %}">💊 Medicamentos</a>
+    <a href="/medicamentos_receta">📄 Requieren Receta</a>
+    <a href="/medicamentos_vencer">⏳ Por Vencer</a>
+    <a href="/ventas_fechas">🧾 Ventas por Fechas</a>
+    <a href="/venta_detalle">📦 Detalle de Venta</a>
+    <a href="/distribuidores" class="{% if titulo == 'Distribuidores' %}active{% endif %}">💊 Distribuidores</a>
+    <a href="/receta_detalle">🧾 Buscar Recetas</a>
+
+
+
+</div>
+
+<!-- CONTENIDO -->
+<div class="main-content">
+    {% block contenido %}
+    {% endblock %}
+</div>
+
+
+    <!-- 🔥 Script del modo oscuro -->
+    <script>
+        const toggleButton = document.getElementById("toggleDarkMode");
+        const body = document.body;
+
+        // Cargar preferencia guardada
+        if (localStorage.getItem("dark-mode") === "enabled") {
+            body.classList.add("dark-mode");
+        }
+
+        toggleButton.addEventListener("click", () => {
+            body.classList.toggle("dark-mode");
+
+            if (body.classList.contains("dark-mode")) {
+                localStorage.setItem("dark-mode", "enabled");
+            } else {
+                localStorage.setItem("dark-mode", "disabled");
+            }
+        });
+    </script>
+
+</body>
+</html>

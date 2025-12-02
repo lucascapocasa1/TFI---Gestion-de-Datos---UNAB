@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% set titulo = "Clientes" %}
+{% block contenido %}
+
+<h1 class="mb-4">Lista de Clientes</h1>
+
+<div class="card shadow">
+    <div class="card-body">
+
+        <table class="table table-hover table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>DNI</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for c in clientes %}
+                <tr>
+                    <td>{{ c[0] }}</td>
+                    <td>{{ c[1] }}</td>
+                    <td>{{ c[2] }}</td>
+                    <td>{{ c[3] }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% set titulo = "Buscar Cliente" %}
+{% block contenido %}
+
+<h1 class="mb-4">Buscar Cliente</h1>
+
+<div class="card shadow mb-4">
+    <div class="card-body">
+
+        <form method="POST">
+            <label class="form-label">Apellido:</label>
+            <input type="text" name="apellido" class="form-control" required>
+
+            <button class="btn btn-primary mt-3">Buscar</button>
+        </form>
+
+    </div>
+</div>
+
+{% if resultados %}
+<div class="card shadow">
+    <div class="card-body">
+
+        <h4 class="mb-3">Resultados</h4>
+
+        <table class="table table-hover table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>ID</th>
+                    <th>Nombre</th>
+                    <th>Apellido</th>
+                    <th>DNI</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for r in resultados %}
+                <tr>
+                    <td>{{ r[0] }}</td>
+                    <td>{{ r[1] }}</td>
+                    <td>{{ r[2] }}</td>
+                    <td>{{ r[3] }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+{% endif %}
+
+{% endblock %}

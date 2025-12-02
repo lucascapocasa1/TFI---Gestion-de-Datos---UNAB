@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% set titulo = "Buscar Recetas" %}
+{% block contenido %}
+
+<h2 class="mb-4">Buscar Recetas</h2>
+
+<div class="card shadow p-4 mb-4">
+    <form method="POST">
+
+        <div class="row">
+            <div class="col-md-6 mb-3">
+                <label class="form-label">ID de Receta</label>
+                <input type="number" name="id_receta" class="form-control" placeholder="Ej: 5">
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <label class="form-label">DNI del Paciente</label>
+                <input type="number" name="dni" class="form-control" placeholder="Ej: 30123456">
+            </div>
+        </div>
+
+        <button class="btn btn-primary mt-2">Buscar</button>
+    </form>
+</div>
+
+{% if mensaje %}
+<div class="alert alert-info shadow">
+    {{ mensaje }}
+</div>
+{% endif %}
+
+{# ===================== RECETA POR ID ===================== #}
+{% if receta %}
+<div class="card shadow p-4 mb-4">
+
+    <h4>Receta #{{ receta.id }}</h4>
+    <p><strong>Fecha:</strong> {{ receta.fecha }}</p>
+    <p><strong>Médico:</strong> {{ receta.medico }} (Matrícula: {{ receta.matricula }})</p>
+    <p><strong>Diagnóstico:</strong> {{ receta.diagnostico }}</p>
+    <p><strong>Paciente:</strong> {{ receta.nombre_pac }} {{ receta.apellido_pac }} (DNI: {{ receta.dni }})</p>
+
+    <h5 class="mt-4">Detalle de Medicación</h5>
+
+    <table class="table table-hover table-bordered mt-2">
+        <thead class="table-secondary">
+            <tr>
+                <th>Medicamento</th>
+                <th>Frecuencia</th>
+                <th>Duración</th>
+                <th>Dosis</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for d in detalles %}
+            <tr>
+                <td>{{ d[0] }}</td>
+                <td>{{ d[1] }}</td>
+                <td>{{ d[2] }}</td>
+                <td>{{ d[3] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endif %}
+
+{# ===================== RECETAS POR DNI ===================== #}
+{% if recetas_paciente %}
+<div class="card shadow p-4 mb-4">
+
+    <h4>Recetas del paciente</h4>
+
+    <table class="table table-hover table-bordered mt-2">
+        <thead class="table-primary">
+            <tr>
+                <th>ID Receta</th>
+                <th>Fecha</th>
+                <th>Médico</th>
+                <th>Diagnóstico</th>
+                <th>Paciente</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for r in recetas_paciente %}
+            <tr>
+                <td>{{ r[0] }}</td>
+                <td>{{ r[1] }}</td>
+                <td>{{ r[2] }}</td>
+                <td>{{ r[3] }}</td>
+                <td>{{ r[4] }} {{ r[5] }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+</div>
+{% endif %}
+
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% set titulo = "Medicamentos con Receta" %}
+{% block contenido %}
+
+<h1 class="mb-4">Medicamentos que Requieren Receta</h1>
+
+<div class="card shadow">
+    <div class="card-body">
+
+        <table class="table table-hover table-striped">
+            <thead class="table-primary">
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio ($)</th>
+                </tr>
+            </thead>
+
+            <tbody>
+            {% for m in medicamentos %}
+                <tr>
+                    <td>{{ m[0] }}</td>
+                    <td>{{ m[1] }}</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+
+    </div>
+</div>
+
+{% endblock %}
