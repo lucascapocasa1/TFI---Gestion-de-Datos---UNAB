@@ -17,6 +17,13 @@
 </div>
 {% endif %}
 
+{% if bajo_stock > 0 %}
+<div class="alert alert-danger shadow">
+    <strong>⚠ Stock Bajo:</strong> Hay <strong>{{ bajo_stock }}</strong> medicamentos con menos de 20 unidades.
+</div>
+{% endif %}
+
+
 <!-- ==================== KPIs ==================== -->
 <div class="row mt-4">
 
@@ -97,7 +104,7 @@
 
 <div class="card shadow mt-5" style="max-width: 800px; margin: auto;">
     <div class="card-body">
-        <h4 class="mb-3">Participación de Ventas por Obra Social</h4>
+        <h4 class="mb-3">Participación de Ventas por Obra Social (JOIN)</h4>
         <canvas id="graficoObraSocial" height="120"></canvas>
     </div>
 </div>

@@ -9,7 +9,7 @@ def crear_conexion():
     return mysql.connector.connect(
         host="localhost",
         user="root",
-        password="PONE TU PASSWORD",
+        password="claypole",
         database="farmacia_tfi"
     )
 
@@ -59,8 +59,17 @@ def inicio():
     """)
     ultimas_ventas = cursor.fetchall()
 
+    # 6) Medicamentos con bajo stock (menos de 20)
+    cursor.execute("""
+        SELECT COUNT(*)
+        FROM medicamento
+        WHERE stock < 20;
+    """)
+    bajo_stock = cursor.fetchone()[0]
 
-    # 🔚 AHORA SÍ cerramos
+
+
+
     cursor.close()
     conexion.close()
 
@@ -71,6 +80,7 @@ def inicio():
         por_vencer=por_vencer,
         facturacion_mes=facturacion_mes,
         ultimas_ventas=ultimas_ventas,
+        bajo_stock=bajo_stock    
     )
 
 
@@ -118,14 +128,25 @@ def buscar_cliente():
 # ----------------------------------------------
 @app.route("/medicamentos")
 def medicamentos():
+    orden = request.args.get("orden", "id")  # valor por defecto
+
     conexion = crear_conexion()
     cursor = conexion.cursor()
-    cursor.execute("SELECT idMedicamento, Nombre, precio FROM medicamento;")
+
+    # Validación de orden para evitar SQL injection
+    if orden == "stock":
+        query = "SELECT idMedicamento, Nombre, precio, stock FROM medicamento ORDER BY stock ASC;"
+    else:
+        query = "SELECT idMedicamento, Nombre, precio, stock FROM medicamento ORDER BY idMedicamento ASC;"
+
+    cursor.execute(query)
     datos = cursor.fetchall()
+
     cursor.close()
     conexion.close()
 
-    return render_template("medicamentos.html", medicamentos=datos)
+    return render_template("medicamentos.html", medicamentos=datos, orden=orden)
+
 
 
 # ----------------------------------------------

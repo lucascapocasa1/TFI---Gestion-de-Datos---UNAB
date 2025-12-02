@@ -4,6 +4,15 @@
 
 <h1 class="mb-4">Medicamentos</h1>
 
+<!-- Selector de orden -->
+<form method="GET" class="mb-3">
+    <label class="form-label">Ordenar por:</label>
+    <select name="orden" class="form-select" onchange="this.form.submit()">
+        <option value="id" {% if orden == "id" %}selected{% endif %}>ID</option>
+        <option value="stock" {% if orden == "stock" %}selected{% endif %}>Stock</option>
+    </select>
+</form>
+
 <div class="card shadow">
     <div class="card-body">
 
@@ -13,6 +22,7 @@
                     <th>ID</th>
                     <th>Nombre</th>
                     <th>Precio ($)</th>
+                    <th>Stock</th>
                 </tr>
             </thead>
 
@@ -22,6 +32,15 @@
                     <td>{{ m[0] }}</td>
                     <td>{{ m[1] }}</td>
                     <td>{{ m[2] }}</td>
+                    <td>
+                        {% if m[3] < 10 %}
+                            <span class="badge bg-danger">{{ m[3] }}</span>
+                        {% elif m[3] < 20 %}
+                            <span class="badge bg-warning">{{ m[3] }}</span>
+                        {% else %}
+                            <span class="badge bg-success">{{ m[3] }}</span>
+                        {% endif %}
+                    </td>
                 </tr>
             {% endfor %}
             </tbody>
